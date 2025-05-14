@@ -1618,9 +1618,26 @@ components:
             `spec.template_parameters` field of the cluster order.
           items:
             $ref: "#/components/schemas/v1ClusterTemplateParameterDefinition"
+        node_sets:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/v1ClusterTemplateNodeSet"
+          description: Initial node sets of the cluster.
       description: |-
         A cluster template defines a type of cluster that can be ordered by the user. Note that the user doesn't create these
         templates: the system provides a collection of them, and the user chooses one.
+    v1ClusterTemplateNodeSet:
+      type: object
+      properties:
+        host_class:
+          type: string
+          description: Identifier of the class of hosts that are part of the set.
+        size:
+          type: integer
+          description: Number of nodes of the set.
+          format: int32
+      description: "Defines a set of nodes that will be part of cluster, all of them\
+        \ of the same class of host."
     v1ClusterTemplateParameterDefinition:
       type: object
       properties:
@@ -1927,6 +1944,11 @@ components:
             `spec.template_parameters` field of the cluster order.
           items:
             $ref: "#/components/schemas/v1ClusterTemplateParameterDefinition"
+        node_sets:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/v1ClusterTemplateNodeSet"
+          description: Initial node sets of the cluster.
       description: |-
         A cluster template defines a type of cluster that can be ordered by the user. Note that the user doesn't create these
         templates: the system provides a collection of them, and the user chooses one.
