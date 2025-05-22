@@ -87,6 +87,18 @@ message ClustersGetKubeconfigViaHttpRequest {
   string id = 1;
 }
 
+message ClustersGetPasswordRequest {
+  string id = 1;
+}
+
+message ClustersGetPasswordResponse {
+  string password = 1;
+}
+
+message ClustersGetPasswordViaHttpRequest {
+  string id = 1;
+}
+
 message ClustersCreateRequest {
   Cluster object = 1;
 }
@@ -136,8 +148,26 @@ service Clusters {
   // `application/yaml`.
   //
   // buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
   rpc GetKubeconfigViaHttp(ClustersGetKubeconfigViaHttpRequest) returns (google.api.HttpBody) {
     option (google.api.http) = {get: "/api/fulfillment/v1/clusters/{id}/kubeconfig"};
+  }
+
+  // Returns the admin password of the cluster.
+  //
+  // This intended for use with the gRPC protocol, and it isn't mapped to an HTTP endpoint. To retrieve the password
+  // via HTTP see the `ClustersGetPasswordViaHttp` method below.
+  rpc GetPassword(ClustersGetPasswordRequest) returns (ClustersGetPasswordResponse) {}
+
+  // Returns the admin password of the cluster.
+  //
+  // This is intended for use with HTTP and returns the YAML text of the password directly using the content type
+  // `text/plain`.
+  //
+  // buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+  // buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+  rpc GetPasswordViaHttp(ClustersGetPasswordViaHttpRequest) returns (google.api.HttpBody) {
+    option (google.api.http) = {get: "/api/fulfillment/v1/clusters/{id}/password"};
   }
 
   // Creates a new cluster.

@@ -638,8 +638,40 @@
     "/api/fulfillment/v1/clusters/{id}/kubeconfig": {
       "get": {
         "summary": "Returns the admin Kubeconfig of the cluster.",
-        "description": "This is intended for use with HTTP and returns the YAML text of the Kubeconfig directly using the content type\n`application/yaml`.\n\nbuf:lint:ignore RPC_RESPONSE_STANDARD_NAME",
+        "description": "This is intended for use with HTTP and returns the YAML text of the Kubeconfig directly using the content type\n`application/yaml`.\n\nbuf:lint:ignore RPC_RESPONSE_STANDARD_NAME\nbuf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
         "operationId": "Clusters_GetKubeconfigViaHttp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiHttpBody"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Clusters"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/clusters/{id}/password": {
+      "get": {
+        "summary": "Returns the admin password of the cluster.",
+        "description": "This is intended for use with HTTP and returns the YAML text of the password directly using the content type\n`text/plain`.\n\nbuf:lint:ignore RPC_RESPONSE_STANDARD_NAME\nbuf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE",
+        "operationId": "Clusters_GetPasswordViaHttp",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -1392,6 +1424,14 @@
       "type": "object",
       "properties": {
         "kubeconfig": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ClustersGetPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "password": {
           "type": "string"
         }
       }
