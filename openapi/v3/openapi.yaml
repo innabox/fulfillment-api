@@ -634,7 +634,41 @@ paths:
         `application/yaml`.
 
         buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+        buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
       operationId: Clusters_GetKubeconfigViaHttp
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/apiHttpBody"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+  /api/fulfillment/v1/clusters/{id}/password:
+    get:
+      tags:
+      - Clusters
+      summary: Returns the admin password of the cluster.
+      description: |-
+        This is intended for use with HTTP and returns the YAML text of the password directly using the content type
+        `text/plain`.
+
+        buf:lint:ignore RPC_RESPONSE_STANDARD_NAME
+        buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+      operationId: Clusters_GetPasswordViaHttp
       parameters:
       - name: id
         in: path
@@ -1724,6 +1758,11 @@ components:
       type: object
       properties:
         kubeconfig:
+          type: string
+    v1ClustersGetPasswordResponse:
+      type: object
+      properties:
+        password:
           type: string
     v1ClustersGetResponse:
       type: object
