@@ -27,6 +27,12 @@
     },
     {
       "name": "HostClasses"
+    },
+    {
+      "name": "HostPools"
+    },
+    {
+      "name": "Hosts"
     }
   ],
   "schemes": [
@@ -962,6 +968,340 @@
           "HostClasses"
         ]
       }
+    },
+    "/api/fulfillment/v1/host_pools": {
+      "get": {
+        "summary": "Retrieves the list of host pools.",
+        "operationId": "HostPools_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostPoolsListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "description": "Index of the first result. If not specified the default value will be zero.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "description": "Maximum number of results to be returned by the server. When not specified all the results will be returned. Note\nthat there may not be enough results to return, and that the server may decide, for performance reasons, to return\nless results than requested.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "Filter criteria.\n\nThe syntax of this parameter is a CEL expression using the `this` prefix for the names of the attributes of the\nobject. For example, in order to retrieve all the orders with more than 3 hosts:\n\n    this.status.size \u003e 3\n\nIf this isn't provided, or if the value is empty, then all the orders that the user has permission to see will be\nreturned.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "description": "Order criteria.\n\nThe syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the\nnames of the attributes of the host class instead of the names of the columns of a table. For example, in order to\nsort the templates descending by title the value should be:\n\n    name desc\n\nIf the parameter isn't provided, or if the value is empty, then the order of the results is undefined.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/host_pools/{id}": {
+      "get": {
+        "summary": "Retrieves the details of one specific host pool.",
+        "operationId": "HostPools_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a host pool.",
+        "operationId": "HostPools_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostPoolsDeleteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/host_pools/{object.id}": {
+      "patch": {
+        "summary": "Updates an existint host pool.",
+        "operationId": "HostPools_Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object.id",
+            "description": "Unique identifier of the pool.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "$ref": "#/definitions/v1Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v1HostPoolSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/v1HostPoolStatus"
+                }
+              },
+              "description": "Contains the details of the pool.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe pool, is provided by the system and can't be modified by the user."
+            }
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts": {
+      "get": {
+        "summary": "Retrieves the list of hosts.",
+        "operationId": "Hosts_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostsListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "description": "Index of the first result. If not specified the default value will be zero.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "description": "Maximum number of results to be returned by the server. When not specified all the results will be returned. Note\nthat there may not be enough results to return, and that the server may decide, for performance reasons, to return\nless results than requested.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "Filter criteria.\n\nThe syntax of this parameter is a CEL expression using the `this` prefix for the names of the attributes of the\nobject. For example, in order to retrieve all the hosts that belong to pool `123`:\n\n    this.status.pool == '123'\n\nIf this isn't provided, or if the value is empty, then all the orders that the user has permission to see will be\nreturned.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "description": "Order criteria.\n\nThe syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the\nnames of the attributes of the host class instead of the names of the columns of a table. For example, in order to\nsort the templates descending by title the value should be:\n\n    name desc\n\nIf the parameter isn't provided, or if the value is empty, then the order of the results is undefined.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts/{id}": {
+      "get": {
+        "summary": "Retrieves the details of one specific host.",
+        "operationId": "Hosts_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a host.",
+        "operationId": "Hosts_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostsDeleteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts/{object.id}": {
+      "patch": {
+        "summary": "Updates an existint host.",
+        "operationId": "Hosts_Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object.id",
+            "description": "Unique identifier of the host.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "$ref": "#/definitions/v1Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v1HostSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/v1HostStatus"
+                }
+              },
+              "description": "Contains the details of a specific host that is part of a pool of hosts."
+            }
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1559,6 +1899,25 @@
         }
       }
     },
+    "v1Host": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the host."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v1Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v1HostSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/v1HostStatus"
+        }
+      },
+      "description": "Contains the details of a specific host that is part of a pool of hosts."
+    },
     "v1HostClass": {
       "type": "object",
       "properties": {
@@ -1628,6 +1987,215 @@
       "properties": {
         "object": {
           "$ref": "#/definitions/v1HostClass"
+        }
+      }
+    },
+    "v1HostPool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the pool."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v1Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v1HostPoolSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/v1HostPoolStatus"
+        }
+      },
+      "description": "Contains the details of the pool.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe pool, is provided by the system and can't be modified by the user."
+    },
+    "v1HostPoolSpec": {
+      "type": "object",
+      "properties": {
+        "host_sets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostSetSpec"
+          },
+          "description": "Desired host sets of the pool.\n\nFor example, a pool created with two different hosts sets, one for hosts without GPUs and another for hosts with\nGPUs could be be represented like this:\n\n```json\n{\n  \"spec\": {\n    \"host_sets\": [\n      {\n        \"host_class\": \"acme_1tb\",\n        \"size\": 3\n      },\n      {\n        \"host_class\": \"acme_1tb_h100\",\n        \"size\": 3\n      }\n    ]\n  }\n}\n```"
+        }
+      },
+      "description": "The spec contains the details of a pool as desired by the user."
+    },
+    "v1HostPoolState": {
+      "type": "string",
+      "enum": [
+        "HOST_POOL_STATE_UNSPECIFIED",
+        "HOST_POOL_STATE_PROGRESSING",
+        "HOST_POOL_STATE_READY",
+        "HOST_POOL_STATE_FAILED"
+      ],
+      "default": "HOST_POOL_STATE_UNSPECIFIED",
+      "description": "Represents the overall state of a pool.\n\n - HOST_POOL_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.\n - HOST_POOL_STATE_PROGRESSING: Indicates that the pool isn't ready yet.\n - HOST_POOL_STATE_READY: Indicates indicates that the pool is ready.\n - HOST_POOL_STATE_FAILED: Indicates indicates that the pool is unusable."
+    },
+    "v1HostPoolStatus": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/v1HostPoolState",
+          "description": "Indicates the overall state of the pool."
+        },
+        "host_sets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostSetStatus"
+          },
+          "description": "Actual host sets of the pool.\n\nThis is the actual status of the hosts sets. It will be different to `spec.host_sets` when there is a change that\nis in progress, or if the system can't apply the changes requested by the user."
+        }
+      },
+      "description": "The status contains the details of the pool provided by the system."
+    },
+    "v1HostPoolsDeleteResponse": {
+      "type": "object"
+    },
+    "v1HostPoolsGetResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1HostPool"
+        }
+      }
+    },
+    "v1HostPoolsListResponse": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter\nof the request if there are not enough items, or of the system decides that returning that number of items isn't\nfeasible or convenient for performance reasons."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items of the collection that match the search criteria, regardless of the number of results\nrequested with the `limit` parameter."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostPool"
+          },
+          "description": "List of results."
+        }
+      }
+    },
+    "v1HostPoolsUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1HostPool"
+        }
+      }
+    },
+    "v1HostSetSpec": {
+      "type": "object",
+      "properties": {
+        "host_class": {
+          "type": "string",
+          "description": "Identifier of the class of hosts.\n\nThe details of the host class can be obtained using the `List` and `Get` method of the `HostClasses` service. For\nexample, to get the details of the `acme_1tb` host class using the HTTP+JSON version of the API:\n\n```http\nGET /api/fulfillment/v1/host_classes/acme_1tb\n```\n\nWhich will return something like this:\n\n```json\n{\n  \"id\": \"acme_1tb\",\n  \"title\": \"ACME server with 1 TiB of RAM and no GPU\",\n  \"description\": \"ACME server model XYZ with 1 TiB of RAM, 2 Xeon 6 CPUS and no GPU.\"\n}\n```"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Desired number of hosts of the set."
+        }
+      },
+      "description": "Desired set of hosts of the pool."
+    },
+    "v1HostSetStatus": {
+      "type": "object",
+      "properties": {
+        "host_class": {
+          "type": "string",
+          "description": "Identifier of the class of hosts."
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Actual number of hosts of the set."
+        }
+      },
+      "description": "Actual set of hosts of the pool."
+    },
+    "v1HostSpec": {
+      "type": "object",
+      "description": "The spec contains the details of a host as desired by the user."
+    },
+    "v1HostState": {
+      "type": "string",
+      "enum": [
+        "HOST_STATE_UNSPECIFIED",
+        "HOST_STATE_PROGRESSING",
+        "HOST_STATE_READY",
+        "HOST_STATE_FAILED"
+      ],
+      "default": "HOST_STATE_UNSPECIFIED",
+      "description": "Represents the overall state of a host.\n\n - HOST_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.\n - HOST_STATE_PROGRESSING: Indicates that the host isn't ready yet.\n - HOST_STATE_READY: Indicates indicates that the host is ready.\n - HOST_STATE_FAILED: Indicates indicates that the host is unusable."
+    },
+    "v1HostStatus": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/v1HostState",
+          "description": "Indicates the overall state of the host."
+        },
+        "host_class": {
+          "type": "string",
+          "description": "Indicates the unique identifier of the host `HostClass` that this host belongs to."
+        },
+        "host_pool": {
+          "type": "string",
+          "description": "Indicates the unique identifier of the host `HostPool` that this host belongs to."
+        }
+      },
+      "description": "The status contains the details of the host provided by the system."
+    },
+    "v1HostsDeleteResponse": {
+      "type": "object"
+    },
+    "v1HostsGetResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1Host"
+        }
+      }
+    },
+    "v1HostsListResponse": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter\nof the request if there are not enough items, or of the system decides that returning that number of items isn't\nfeasible or convenient for performance reasons."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items of the collection that match the search criteria, regardless of the number of results\nrequested with the `limit` parameter."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Host"
+          },
+          "description": "List of results."
+        }
+      }
+    },
+    "v1HostsUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1Host"
         }
       }
     },
