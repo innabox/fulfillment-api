@@ -15,6 +15,7 @@ syntax = "proto3";
 
 package fulfillment.v1;
 
+import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "shared/v1/condition_status_type.proto";
 import "shared/v1/metadata_type.proto";
@@ -34,6 +35,51 @@ message Cluster {
 
 // The spec contains the details of a cluster as desired by the user.
 message ClusterSpec {
+  // Reference to the cluster template.
+  //
+  // This is mandatory, and must be the value of the `id` field of one of the cluster templates.
+  //
+  // This can't be modified after the cluster is created.
+  string template = 1;
+
+  // Values of the template parameters.
+  //
+  // When using the HTTP+JSON version of the API the values must be represented as documented in the (ProtoJSON format
+  // document)[https://protobuf.dev/programming-guides/json]. For example, if the template has a `number_of_gpus`
+  // parameter of integer type, the complete cluster should be represented like this:
+  //
+  // ```json
+  // {
+  //   "spec": {
+  //     "template_id": "123",
+  //     "template_parameters": {
+  //       "number_of_gpus": {
+  //         "@type": "type.googleapis.com/google.protobuf.Int32Value",
+  //         "value": 3
+  //       }
+  //     }
+  //   }
+  // }
+  // ```
+  //
+  // The possible values of the `@type` are the same as those used by the `type_url` field of the `Any` type:
+  //
+  // | Type                           | Value                                             |
+  // |--------------------------------|---------------------------------------------------|
+  // | Boolean                        | `type.googleapis.com/google.protobuf.BoolValue`   |
+  // | Integer number, 32 bits        | `type.googleapis.com/google.protobuf.Int32Value`  |
+  // | Integer number, 64 bits        | `type.googleapis.com/google.protobuf.Int64Value`  |
+  // | Floating point number, 32 bits | `type.googleapis.com/google.protobuf.FloatValue`  |
+  // | Floating point number, 64 bits | `type.googleapis.com/google.protobuf.DoubleValue` |
+  // | String                         | `type.googleapis.com/google.protobuf.StringValue` |
+  // | Timestamp                      | `type.googleapis.com/google.protobuf.Timestamp`   |
+  // | Duration                       | `type.googleapis.com/google.protobuf.Duration`    |
+  // | Array of bytes                 | `type.googleapis.com/google.protobuf.BytesValue`  |
+  // | Any JSON value                 | `type.googleapis.com/google.protobuf.Value`       |
+  //
+  // These parameters can't be modified after the cluster is created.
+  map<string, google.protobuf.Any> template_parameters = 2;
+
   // Desired node sets of the cluster.
   //
   // This will be automatically set by the system when the cluster is initially created, according to the template
@@ -84,7 +130,7 @@ message ClusterSpec {
   // If at any time the system can't allocate the number of nodes requested by the user, because of permissions, quota,
   // availability of resources or system errors, the cluster will be marked as degraded, and the details will be in the
   // `DEGRADED` condition.
-  map<string, ClusterNodeSet> node_sets = 1;
+  map<string, ClusterNodeSet> node_sets = 3;
 }
 
 // The status contains the details of the cluster provided by the system.
