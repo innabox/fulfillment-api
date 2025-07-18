@@ -1408,8 +1408,6 @@ components:
       properties:
         object:
           $ref: "#/components/schemas/v1Cluster"
-        update_mask:
-          type: string
     v1ConditionStatus:
       type: string
       description: |2-
