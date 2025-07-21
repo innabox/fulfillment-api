@@ -109,11 +109,11 @@ message ClustersCreateResponse {
 
 message ClustersUpdateRequest {
   Cluster object = 1;
+  google.protobuf.FieldMask update_mask = 2;
 }
 
 message ClustersUpdateResponse {
   Cluster object = 1;
-  google.protobuf.FieldMask update_mask = 2;
 }
 
 message ClustersDeleteRequest {

@@ -1151,9 +1151,6 @@
       "properties": {
         "object": {
           "$ref": "#/definitions/v1Cluster"
-        },
-        "update_mask": {
-          "type": "string"
         }
       }
     },
