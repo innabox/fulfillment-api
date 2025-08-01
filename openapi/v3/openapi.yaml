@@ -1531,6 +1531,9 @@ components:
           type: string
           description: Time of deletion of the object.
           format: date-time
+        owner:
+          type: string
+          description: Owner of the object.
       description: Metadata common to all kinds of objects.
     Stream result of v1EventsWatchResponse:
       title: Stream result of v1EventsWatchResponse

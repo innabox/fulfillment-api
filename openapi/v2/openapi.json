@@ -1287,6 +1287,10 @@
           "type": "string",
           "format": "date-time",
           "description": "Time of deletion of the object."
+        },
+        "owner": {
+          "type": "string",
+          "description": "Owner of the object."
         }
       },
       "description": "Metadata common to all kinds of objects."
