@@ -1288,9 +1288,12 @@
           "format": "date-time",
           "description": "Time of deletion of the object."
         },
-        "owner": {
-          "type": "string",
-          "description": "Owner of the object."
+        "owners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names of the owners of the object."
         }
       },
       "description": "Metadata common to all kinds of objects."
