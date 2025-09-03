@@ -15,6 +15,8 @@ tags:
 - name: ClusterTemplates
 - name: Clusters
 - name: HostClasses
+- name: VirtualMachineTemplates
+- name: VirtualMachines
 paths:
   /api/events/v1/events:
     get:
@@ -720,6 +722,409 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/v1HostClass"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      x-codegen-request-body-name: object
+  /api/fulfillment/v1/virtual_machine_templates:
+    get:
+      tags:
+      - VirtualMachineTemplates
+      summary: Retrieves the list of virtual machine templates.
+      operationId: VirtualMachineTemplates_List
+      parameters:
+      - name: offset
+        in: query
+        description: Index of the first result. If not specified the default value
+          will be zero.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: |-
+          Maximum number of results to be returned by the server. When not specified all the results will be returned. Note
+          that there may not be enough results to return, and that the server may decide, for performance reasons, to return
+          less results than requested.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: filter
+        in: query
+        description: |-
+          Filter criteria.
+
+          The syntax of this parameter is similar to the syntax of the _where_ clause of a SQL statement, but using the names
+          of the attributes of the template instead of the names of the columns of a table. For example, in order to retrieve
+          all the templates with a title starting with `large` the value should be:
+
+              title like 'large%'
+
+          If this isn't provided, or if the value is empty, then all the templates that the user has permission to see will
+          be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: |-
+          Order criteria.
+
+          The syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the
+          names of the attributes of the templated instead of the names of the columns of a table. For example, in order to
+          sort the templates descending by title the value should be:
+
+              name desc
+
+          If the parameter isn't provided, or if the value is empty, then the order of the results is undefined.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachineTemplatesListResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+    post:
+      tags:
+      - VirtualMachineTemplates
+      summary: Creates a new virtual machine template.
+      operationId: VirtualMachineTemplates_Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1VirtualMachineTemplate"
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachineTemplate"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      x-codegen-request-body-name: object
+  /api/fulfillment/v1/virtual_machine_templates/{id}:
+    get:
+      tags:
+      - VirtualMachineTemplates
+      summary: Retrieves the details of one specific virtual machine template.
+      operationId: VirtualMachineTemplates_Get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachineTemplate"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+    delete:
+      tags:
+      - VirtualMachineTemplates
+      summary: Delete a virtual machine template.
+      operationId: VirtualMachineTemplates_Delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachineTemplatesDeleteResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+  /api/fulfillment/v1/virtual_machine_templates/{object.id}:
+    patch:
+      tags:
+      - VirtualMachineTemplates
+      summary: Updates an existing virtual machine template.
+      operationId: VirtualMachineTemplates_Update
+      parameters:
+      - name: object.id
+        in: path
+        description: Unique identifier of the template.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/virtual_machine_templates_object_id_body"
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachineTemplate"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      x-codegen-request-body-name: object
+  /api/fulfillment/v1/virtual_machines:
+    get:
+      tags:
+      - VirtualMachines
+      summary: Retrieves the list of virtual machines.
+      operationId: VirtualMachines_List
+      parameters:
+      - name: offset
+        in: query
+        description: Index of the first result. If not specified the default value
+          will be zero.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: |-
+          Maximum number of results to be returned by the server. When not specified all the results will be returned. Note
+          that there may not be enough results to return, and that the server may decide, for performance reasons, to return
+          less results than requested.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: filter
+        in: query
+        description: |-
+          Filter criteria.
+
+          The syntax of this parameter is similar to the syntax of the _where_ clause of a SQL statement, but using the names
+          of the attributes of the virtual machine instead of the names of the columns of a table. For example, in order to retrieve
+          all the virtual machines with an IP address starting with `192.168` the value should be:
+
+              ip_address like '192.168%'
+
+          If this isn't provided, or if the value is empty, then all the virtual machines that the user has permission to see will be
+          returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: |-
+          Order criteria.
+
+          The syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the
+          names of the attributes of the virtual machine instead of the names of the columns of a table. For example, in order to
+          sort the virtual machines descending by IP address the value should be:
+
+              ip_address desc
+
+          If the parameter isn't provided, or if the value is empty, then the order of the results is undefined.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachinesListResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+    post:
+      tags:
+      - VirtualMachines
+      summary: Creates a new virtual machine.
+      description: |-
+        Note that this operation is not allowed for regular users, only for the server. Regular users create virtual machines
+        indirectly, creating a virtual machine order that will eventually result in the system creating a virtual machine.
+      operationId: VirtualMachines_Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/v1VirtualMachine"
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachine"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      x-codegen-request-body-name: object
+  /api/fulfillment/v1/virtual_machines/{id}:
+    get:
+      tags:
+      - VirtualMachines
+      summary: Retrieves the details of one specific virtual machine.
+      operationId: VirtualMachines_Get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachine"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+    delete:
+      tags:
+      - VirtualMachines
+      summary: Delete a virtual machine.
+      operationId: VirtualMachines_Delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachinesDeleteResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+  /api/fulfillment/v1/virtual_machines/{object.id}:
+    patch:
+      tags:
+      - VirtualMachines
+      summary: Updates an existing virtual machine.
+      description: |-
+        In the HTTP+JSON version of the API this is mapped to the `PATCH` verb and the `update_mask` field is automatically
+        populated from the list of fields present in the request body. For example, to update the `state` of a virtual machine to
+        `READY` the request line should be like this:
+
+        ```http
+        PATCH /api/fulfillment/v1/virtual_machines/123
+        ```
+
+        And the request body should be like this:
+
+        ```json
+        {
+          "status": {
+            "state": "VIRTUAL_MACHINE_STATE_READY"
+          }
+        }
+        ```
+
+        The response body will contain the modified object.
+      operationId: VirtualMachines_Update
+      parameters:
+      - name: object.id
+        in: path
+        description: Unique identifier of the virtual machine.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/virtual_machines_object_id_body"
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1VirtualMachine"
         default:
           description: An unexpected error response.
           content:
@@ -1537,6 +1942,355 @@ components:
           items:
             type: string
       description: Metadata common to all kinds of objects.
+    v1VirtualMachine:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the virtual machine.
+        metadata:
+          $ref: "#/components/schemas/v1Metadata"
+        spec:
+          $ref: "#/components/schemas/v1VirtualMachineSpec"
+        status:
+          $ref: "#/components/schemas/v1VirtualMachineStatus"
+      description: |-
+        Contains the details of the virtual machine.
+
+        The `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of
+        the virtual machine, is provided by the system and can't be modified by the user.
+    v1VirtualMachineCondition:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/v1VirtualMachineConditionType"
+        status:
+          $ref: "#/components/schemas/v1ConditionStatus"
+        last_transition_time:
+          type: string
+          description: This time is the last time that the condition was updated.
+          format: date-time
+        reason:
+          type: string
+          description: |-
+            Contains a the reason of the condition in a format suitable for use by programs.
+
+            The possible values will be documented in the object that contains the condition.
+        message:
+          type: string
+          description: |-
+            Contains a text giving more details of the condition.
+
+            This will usually be progress reports, or error messages, and are intended for use by humans, to debug problems.
+      description: Contains the details of a condition that describes the status of
+        a virtual machine.
+    v1VirtualMachineConditionType:
+      type: string
+      description: |-
+        Types of conditions used to describe the status of virtual machine.
+
+         - VIRTUAL_MACHINE_CONDITION_TYPE_UNSPECIFIED: Unspecified indicates that the condition is unknown.
+
+        This will never be appear in the `spec.conditions` field of a virtual machine.
+         - VIRTUAL_MACHINE_CONDITION_TYPE_PROGRESSING: Indicates that the virtual machine isn't completely ready yet.
+
+        Currently there are no `reason` values defined.
+         - VIRTUAL_MACHINE_CONDITION_TYPE_READY: Indicates that the virtual machine is ready to use.
+
+        Currently there are no `reason` values defined.
+         - VIRTUAL_MACHINE_CONDITION_TYPE_FAILED: Indicates that the virtual machine is unusable.
+
+        Currently there are no `reason` values defined.
+         - VIRTUAL_MACHINE_CONDITION_TYPE_DEGRADED: Indicates that the virtual machine is degraded.
+      default: VIRTUAL_MACHINE_CONDITION_TYPE_UNSPECIFIED
+      enum:
+      - VIRTUAL_MACHINE_CONDITION_TYPE_UNSPECIFIED
+      - VIRTUAL_MACHINE_CONDITION_TYPE_PROGRESSING
+      - VIRTUAL_MACHINE_CONDITION_TYPE_READY
+      - VIRTUAL_MACHINE_CONDITION_TYPE_FAILED
+      - VIRTUAL_MACHINE_CONDITION_TYPE_DEGRADED
+    v1VirtualMachineSpec:
+      type: object
+      properties:
+        template:
+          type: string
+          description: |-
+            Reference to the virtual machine template.
+
+            This is mandatory, and must be the value of the `id` field of one of the virtual machine templates.
+
+            This can't be modified after the virtual machine is created.
+        template_parameters:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/protobufAny"
+          description: |-
+            Values of the template parameters.
+
+            When using the HTTP+JSON version of the API the values must be represented as documented in the (ProtoJSON format
+            document)[https://protobuf.dev/programming-guides/json]. For example, if the template has a `cpu_count`
+            parameter of integer type, the complete virtual machine should be represented like this:
+
+            ```json
+            {
+              "spec": {
+                "template": "123",
+                "template_parameters": {
+                  "cpu_count": {
+                    "@type": "type.googleapis.com/google.protobuf.Int32Value",
+                    "value": 4
+                  }
+                }
+              }
+            }
+            ```
+
+            The possible values of the `@type` are the same as those used by the `type_url` field of the `Any` type:
+
+            | Type                           | Value                                             |
+            |--------------------------------|---------------------------------------------------|
+            | Boolean                        | `type.googleapis.com/google.protobuf.BoolValue`   |
+            | Integer number, 32 bits        | `type.googleapis.com/google.protobuf.Int32Value`  |
+            | Integer number, 64 bits        | `type.googleapis.com/google.protobuf.Int64Value`  |
+            | Floating point number, 32 bits | `type.googleapis.com/google.protobuf.FloatValue`  |
+            | Floating point number, 64 bits | `type.googleapis.com/google.protobuf.DoubleValue` |
+            | String                         | `type.googleapis.com/google.protobuf.StringValue` |
+            | Timestamp                      | `type.googleapis.com/google.protobuf.Timestamp`   |
+            | Duration                       | `type.googleapis.com/google.protobuf.Duration`    |
+            | Array of bytes                 | `type.googleapis.com/google.protobuf.BytesValue`  |
+            | Any JSON value                 | `type.googleapis.com/google.protobuf.Value`       |
+
+            These parameters can't be modified after the virtual machine is created.
+      description: The spec contains the details of a virtual machine as desired by
+        the user.
+    v1VirtualMachineState:
+      type: string
+      description: |-
+        Represents the overall state of a virtual machine.
+
+         - VIRTUAL_MACHINE_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.
+         - VIRTUAL_MACHINE_STATE_PROGRESSING: Indicates that the virtual machine isn't ready yet.
+         - VIRTUAL_MACHINE_STATE_READY: Indicates that the virtual machine is ready.
+         - VIRTUAL_MACHINE_STATE_FAILED: Indicates that the virtual machine is unusable.
+      default: VIRTUAL_MACHINE_STATE_UNSPECIFIED
+      enum:
+      - VIRTUAL_MACHINE_STATE_UNSPECIFIED
+      - VIRTUAL_MACHINE_STATE_PROGRESSING
+      - VIRTUAL_MACHINE_STATE_READY
+      - VIRTUAL_MACHINE_STATE_FAILED
+    v1VirtualMachineStatus:
+      type: object
+      properties:
+        state:
+          $ref: "#/components/schemas/v1VirtualMachineState"
+        conditions:
+          type: array
+          description: |-
+            Contains a list of conditions that describe in detail the status of the virtual machine.
+
+            For example, a virtual machine that is ready could be represented like this (when converted to JSON):
+
+               {
+                 "id": "123",
+                 "spec": {
+                 },
+                 "status": {
+                   "state": "VIRTUAL_MACHINE_STATE_READY",
+                   "conditions": [
+                     {
+                       "type": "VIRTUAL_MACHINE_CONDITION_TYPE_READY",
+                       "status": "CONDITION_STATUS_TRUE",
+                       "last_transition_time": "2025-03-12 20:15:59+00:00",
+                       "message": "The virtual machine is ready to use",
+                     },
+                     {
+                       "type": "VIRTUAL_MACHINE_CONDITION_TYPE_FAILED",
+                       "status": "CONDITION_STATUS_FALSE",
+                       "last_transition_time": "2025-03-12 20:10:59+00:00"
+                     }
+                   ]
+                 }
+               }
+
+            In this example the `READY` condition is true. That tells us that the virtual machine is ready to use via the IP address
+            provided in the `status.ip_address` field.
+
+            The `FAILED` condition is false. That tells us that the virtual machine is *not* failed.
+
+            Note that in this example, to make it shorter, only one condition appears. In general all the conditions (except
+            `UNSPECIFIED`) will appear exactly once.
+
+            Check the documentation of the values of the `VirtualMachineConditionType` enumerated type to see possible conditions and
+            reasons.
+          items:
+            $ref: "#/components/schemas/v1VirtualMachineCondition"
+        ip_address:
+          type: string
+          description: |-
+            IP address of the virtual machine.
+
+            This will be empty if the virtual machine isn't ready.
+      description: The status contains the details of the virtual machine provided
+        by the system.
+    v1VirtualMachineTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the template.
+        metadata:
+          $ref: "#/components/schemas/v1Metadata"
+        title:
+          type: string
+          description: |-
+            Human friendly short description of the template, only a few words, suitable for displaying in one single line on a
+            UI or CLI.
+        description:
+          type: string
+          description: "Human friendly long description of the template, using Markdown\
+            \ format."
+        parameters:
+          type: array
+          description: |-
+            Definitions of the parameters that can be used to customize the template.
+
+            Note that these are only the *definitions* of the parameters, not the actual values. The actual values are in the
+            `spec.template_parameters` field of the virtual machine.
+          items:
+            $ref: "#/components/schemas/v1VirtualMachineTemplateParameterDefinition"
+      description: |-
+        A virtual machine template defines a type of virtual machine that can be created by the user. Note that the user doesn't create these
+        templates: the system provides a collection of them, and the user chooses one.
+    v1VirtualMachineTemplateParameterDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+          description: |-
+            Name of the parameter.
+
+            This is the name that should be used in the `template_parameters` field of the virtual machine to assign a value to the
+            parameter.
+        title:
+          type: string
+          description: |-
+            Human friendly short description of the parameter, only a few words, suitable for displaying in one single line on
+            a UI or CLI.
+        description:
+          type: string
+          description: "Human friendly description of the parameter, using Markdown\
+            \ format."
+        required:
+          type: boolean
+          description: |-
+            Indicates if this parameter is required or optional.
+
+            Values for required parameters must be included when creating the virtual machine, otherwise it will be rejected.
+
+            Note that there may be other dependencies between parameters which may cause a virtual machine to be rejected. For example,
+            the allowed values of a parameter may depend on the value of another parameter. That kind of information will be in
+            the `description` field.
+        type:
+          type: string
+          description: |-
+            Type of the parameter.
+
+            The possible values are the same as those used by the `type_url` field of the `Any` type:
+
+            | Type                           | Value                                             |
+            |--------------------------------|---------------------------------------------------|
+            | Boolean                        | `type.googleapis.com/google.protobuf.BoolValue`   |
+            | Integer number, 32 bits        | `type.googleapis.com/google.protobuf.Int32Value`  |
+            | Integer number, 64 bits        | `type.googleapis.com/google.protobuf.Int64Value`  |
+            | Floating point number, 32 bits | `type.googleapis.com/google.protobuf.FloatValue`  |
+            | Floating point number, 64 bits | `type.googleapis.com/google.protobuf.DoubleValue` |
+            | String                         | `type.googleapis.com/google.protobuf.StringValue` |
+            | Timestamp                      | `type.googleapis.com/google.protobuf.Timestamp`   |
+            | Duration                       | `type.googleapis.com/google.protobuf.Duration`    |
+            | Array of bytes                 | `type.googleapis.com/google.protobuf.BytesValue`  |
+            | Any JSON value                 | `type.googleapis.com/google.protobuf.Value`       |
+
+            When using the HTTP+JSON version of the API the value provided in the `template_parameters` field of the virtual machine
+            must be represented as documented in the (ProtoJSON format document)[https://protobuf.dev/programming-guides/json].
+        default:
+          $ref: "#/components/schemas/protobufAny"
+      description: Contains type and documentation of a template parameter.
+    v1VirtualMachineTemplatesCreateResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachineTemplate"
+    v1VirtualMachineTemplatesDeleteResponse:
+      type: object
+    v1VirtualMachineTemplatesGetResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachineTemplate"
+    v1VirtualMachineTemplatesListResponse:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: |-
+            Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter
+            of the request if there are not enough items, or of the system decides that returning that number of items isn't
+            feasible or convenient for performance reasons.
+          format: int32
+        total:
+          type: integer
+          description: |-
+            Total number of items of the collection that match the search criteria, regardless of the number of results
+            requested with the `limit` parameter.
+          format: int32
+        items:
+          type: array
+          description: List of results.
+          items:
+            $ref: "#/components/schemas/v1VirtualMachineTemplate"
+    v1VirtualMachineTemplatesUpdateResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachineTemplate"
+    v1VirtualMachinesCreateResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachine"
+    v1VirtualMachinesDeleteResponse:
+      type: object
+    v1VirtualMachinesGetResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachine"
+    v1VirtualMachinesListResponse:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: |-
+            Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter
+            of the request if there are not enough items, or of the system decides that returning that number of items isn't
+            feasible or convenient for performance reasons.
+          format: int32
+        total:
+          type: integer
+          description: |-
+            Total number of items of the collection that match the search criteria, regardless of the number of results
+            requested with the `limit` parameter.
+          format: int32
+        items:
+          type: array
+          description: List of results.
+          items:
+            $ref: "#/components/schemas/v1VirtualMachine"
+    v1VirtualMachinesUpdateResponse:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/v1VirtualMachine"
     Stream result of v1EventsWatchResponse:
       title: Stream result of v1EventsWatchResponse
       type: object
@@ -1613,4 +2367,44 @@ components:
         This is similar to the _instance type_ concept used by many cloud providers.
 
         The detailed chracteristics of the host (CPU, memory, GPU, etc) will be in the `description` field.
+    virtual_machine_templates_object_id_body:
+      type: object
+      properties:
+        metadata:
+          $ref: "#/components/schemas/v1Metadata"
+        title:
+          type: string
+          description: |-
+            Human friendly short description of the template, only a few words, suitable for displaying in one single line on a
+            UI or CLI.
+        description:
+          type: string
+          description: "Human friendly long description of the template, using Markdown\
+            \ format."
+        parameters:
+          type: array
+          description: |-
+            Definitions of the parameters that can be used to customize the template.
+
+            Note that these are only the *definitions* of the parameters, not the actual values. The actual values are in the
+            `spec.template_parameters` field of the virtual machine.
+          items:
+            $ref: "#/components/schemas/v1VirtualMachineTemplateParameterDefinition"
+      description: |-
+        A virtual machine template defines a type of virtual machine that can be created by the user. Note that the user doesn't create these
+        templates: the system provides a collection of them, and the user chooses one.
+    virtual_machines_object_id_body:
+      type: object
+      properties:
+        metadata:
+          $ref: "#/components/schemas/v1Metadata"
+        spec:
+          $ref: "#/components/schemas/v1VirtualMachineSpec"
+        status:
+          $ref: "#/components/schemas/v1VirtualMachineStatus"
+      description: |-
+        Contains the details of the virtual machine.
+
+        The `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of
+        the virtual machine, is provided by the system and can't be modified by the user.
 x-original-swagger-version: "2.0"
