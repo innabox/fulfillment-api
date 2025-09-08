@@ -25,6 +25,6 @@ message Metadata {
   // Time of deletion of the object.
   google.protobuf.Timestamp deletion_timestamp = 2;
 
-  // Names of the owners of the object.
-  repeated string owners = 3;
+  // Names of the creators of the object.
+  repeated string creators = 3;
 }
