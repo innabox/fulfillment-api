@@ -26,6 +26,12 @@
       "name": "HostClasses"
     },
     {
+      "name": "HostPools"
+    },
+    {
+      "name": "Hosts"
+    },
+    {
       "name": "VirtualMachineTemplates"
     },
     {
@@ -764,6 +770,404 @@
         ],
         "tags": [
           "HostClasses"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/host_pools": {
+      "get": {
+        "summary": "Retrieves the list of host pools.",
+        "operationId": "HostPools_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostPoolsListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "description": "Index of the first result. If not specified the default value will be zero.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "description": "Maximum number of results to be returned by the server. When not specified all the results will be returned. Note\nthat there may not be enough results to return, and that the server may decide, for performance reasons, to return\nless results than requested.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "Filter criteria.\n\nThe syntax of this parameter is similar to the syntax of the _where_ clause of a SQL statement, but using the names\nof the attributes of the host pool instead of the names of the columns of a table. For example, in order to retrieve\nall the host pool with a API URL starting with `http:` the value should be:\n\n    api_url like 'http:%'\n\nIf this isn't provided, or if the value is empty, then all the host pools that the user has permission to see will be\nreturned.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "description": "Order criteria.\n\nThe syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the\nnames of the attributes of the host pool instead of the names of the columns of a table. For example, in order to\nsort the host pools descending by API URL the value should be:\n\n    api_url desc\n\nIf the parameter isn't provided, or if the value is empty, then the order of the results is undefined.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      },
+      "post": {
+        "summary": "Creates a new host pool.",
+        "operationId": "HostPools_Create",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/host_pools/{id}": {
+      "get": {
+        "summary": "Retrieves the details of one specific host pool.",
+        "operationId": "HostPools_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a host pool.",
+        "operationId": "HostPools_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostPoolsDeleteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/host_pools/{object.id}": {
+      "patch": {
+        "summary": "Updates an existing host pool.",
+        "description": "In the HTTP+JSON version of the API this is mapped to the `PATCH` verb and the `update_mask` field is automatically\npopulated from the list of fields present in the request body. For example, to update the `state` of a host pool to\n`READY` the request line should be like this:\n\n```http\nPATCH /api/fulfillment/v1/host_pools/123\n```\n\nAnd the request body should be like this:\n\n```json\n{\n  \"spec\": {\n    \"host_sets\": [{ \"host_class\": \"fc430\", \"size\": 3 }]\n  }\n}\n```\n\nThe response body will contain the modified object.",
+        "operationId": "HostPools_Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1HostPool"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object.id",
+            "description": "Unique identifier of the host pool.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "$ref": "#/definitions/v1Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v1HostPoolSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/v1HostPoolStatus"
+                }
+              },
+              "description": "Contains the details of the host pool.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe host pool, is provided by the system and can't be modified by the user."
+            }
+          }
+        ],
+        "tags": [
+          "HostPools"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts": {
+      "get": {
+        "summary": "Retrieves the list of hosts.",
+        "operationId": "Hosts_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostsListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offset",
+            "description": "Index of the first result. If not specified the default value will be zero.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "description": "Maximum number of results to be returned by the server. When not specified all the results will be returned. Note\nthat there may not be enough results to return, and that the server may decide, for performance reasons, to return\nless results than requested.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "Filter criteria.\n\nThe syntax of this parameter is similar to the syntax of the _where_ clause of a SQL statement, but using the names\nof the attributes of the network instead of the names of the columns of a table. For example, in order to retrieve\nall the hosts with a title starting with `foo` the value should be:\n\n    title like 'foo%'\n\nIf this isn't provided, or if the value is empty, then all the hosts that the user has permission to see will be\nreturned.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "description": "Order criteria.\n\nThe syntax of this parameter is similar to the syntax of the _order by_ clause of a SQL statement, but using the\nnames of the attributes of the network instead of the names of the columns of a table. For example, in order to\nsort the hosts descending by title the value should be:\n\n    title desc\n\nIf the parameter isn't provided, or if the value is empty, then the order of the results is undefined.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      },
+      "post": {
+        "summary": "Creates a new host.",
+        "operationId": "Hosts_Create",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts/{id}": {
+      "get": {
+        "summary": "Retrieves the details of one specific host.",
+        "operationId": "Hosts_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a host.",
+        "operationId": "Hosts_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1HostsDeleteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Hosts"
+        ]
+      }
+    },
+    "/api/fulfillment/v1/hosts/{object.id}": {
+      "patch": {
+        "summary": "Updates an existing host.",
+        "description": "In the HTTP+JSON version of the API this is mapped to the `PATCH` verb and the `update_mask` field is automatically\npopulated from the list of fields present in the request body. For example, to update the `title` of a host to\n`foo` the request line should be like this:\n\n```http\nPATCH /api/fulfillment/v1/hosts/123\n```\n\nAnd the request body should be like this:\n\n```json\n{\n  \"title\": \"foo\"\n}\n```\n\nThe response body will contain the modified object.",
+        "operationId": "Hosts_Update",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1Host"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "object.id",
+            "description": "Unique identifier of the host.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "object",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "$ref": "#/definitions/v1Metadata"
+                },
+                "spec": {
+                  "$ref": "#/definitions/v1HostSpec"
+                },
+                "status": {
+                  "$ref": "#/definitions/v1HostStatus"
+                }
+              },
+              "description": "Contains the details of the host.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe host, is provided by the system and can't be modified by the user."
+            }
+          }
+        ],
+        "tags": [
+          "Hosts"
         ]
       }
     },
@@ -1617,6 +2021,25 @@
         }
       }
     },
+    "v1Host": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the host."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v1Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v1HostSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/v1HostStatus"
+        }
+      },
+      "description": "Contains the details of the host.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe host, is provided by the system and can't be modified by the user."
+    },
     "v1HostClass": {
       "type": "object",
       "properties": {
@@ -1686,6 +2109,265 @@
       "properties": {
         "object": {
           "$ref": "#/definitions/v1HostClass"
+        }
+      }
+    },
+    "v1HostPool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the host pool."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v1Metadata"
+        },
+        "spec": {
+          "$ref": "#/definitions/v1HostPoolSpec"
+        },
+        "status": {
+          "$ref": "#/definitions/v1HostPoolStatus"
+        }
+      },
+      "description": "Contains the details of the host pool.\n\nThe `spec` contains the desired details, and may be modified by the user. The `status` contains the current status of\nthe host pool, is provided by the system and can't be modified by the user."
+    },
+    "v1HostPoolCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v1HostPoolConditionType",
+          "description": "Indicates the type of condition."
+        },
+        "status": {
+          "$ref": "#/definitions/v1ConditionStatus",
+          "description": "Indicates the status of the condition."
+        },
+        "last_transition_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This time is the last time that the condition was updated."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Contains a the reason of the condition in a format suitable for use by programs.\n\nThe possible values will be documented in the object that contains the condition."
+        },
+        "message": {
+          "type": "string",
+          "description": "Contains a text giving more details of the condition.\n\nThis will usually be progress reports, or error messages, and are intended for use by humans, to debug problems."
+        }
+      },
+      "description": "Contains the details of a condition that describes the status of a host pool."
+    },
+    "v1HostPoolConditionType": {
+      "type": "string",
+      "enum": [
+        "HOST_POOL_CONDITION_TYPE_UNSPECIFIED",
+        "HOST_POOL_CONDITION_TYPE_PROGRESSING",
+        "HOST_POOL_CONDITION_TYPE_READY",
+        "HOST_POOL_CONDITION_TYPE_FAILED",
+        "HOST_POOL_CONDITION_TYPE_DEGRADED"
+      ],
+      "default": "HOST_POOL_CONDITION_TYPE_UNSPECIFIED",
+      "description": "Types of conditions used to describe the status of host pool.\n\n - HOST_POOL_CONDITION_TYPE_UNSPECIFIED: Unspecified indicates that the condition is unknown.\n\nThis will never be appear in the `spec.conditions` field of a host pool.\n - HOST_POOL_CONDITION_TYPE_PROGRESSING: Indicates that the host pool isn't completely ready yet.\n\nCurrently there are no `reason` values defined.\n - HOST_POOL_CONDITION_TYPE_READY: Indicates that the host pool is ready to use.\n\nCurrently there are no `reason` values defined.\n - HOST_POOL_CONDITION_TYPE_FAILED: Indicates that the host pool is unusable.\n\nCurrently there are no `reason` values defined.\n - HOST_POOL_CONDITION_TYPE_DEGRADED: Indicates that the host pool is degraded."
+    },
+    "v1HostPoolHostSet": {
+      "type": "object",
+      "properties": {
+        "host_class": {
+          "type": "string",
+          "description": "Identifier of the class of hosts that are part of the set.\n\nThe details of the host class can be obtained using the `List` and `Get` method of the `HostClasses` service. For\nexample, to get the details of the `acme_1tb` host class using the HTTP+JSON version of the API:\n\n```http\nGET /api/fulfillment/v1/host_classes/acme_1tb\n```\n\nWhich will return something like this:\n\n```json\n{\n  \"id\": \"acme_1tb\",\n  \"title\": \"ACME server with 1 TiB of RAM and no GPU\",\n  \"description\": \"ACME server model XYZ with 1 TiB of RAM, 2 Xeon 6 CPUS and no GPU.\"\n}\n```\n\nThis will be set by the system when the host pool is initially created, according to the template selected by the\nuser.\n\nThe user will not have permission to change this field."
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of hosts of the set."
+        }
+      },
+      "description": "Defines a set of hosts that are part of the host pool, all of them of the same class of host."
+    },
+    "v1HostPoolSpec": {
+      "type": "object",
+      "properties": {
+        "host_sets": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v1HostPoolHostSet"
+          },
+          "description": "Desired host sets of the host pool.\n\nThe key of the map is the unique identifier of the host set for this host pool."
+        }
+      },
+      "description": "The spec contains the details of a host pool as desired by the user."
+    },
+    "v1HostPoolState": {
+      "type": "string",
+      "enum": [
+        "HOST_POOL_STATE_UNSPECIFIED",
+        "HOST_POOL_STATE_PROGRESSING",
+        "HOST_POOL_STATE_READY",
+        "HOST_POOL_STATE_FAILED"
+      ],
+      "default": "HOST_POOL_STATE_UNSPECIFIED",
+      "description": "Represents the overall state of a host pool.\n\n - HOST_POOL_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.\n - HOST_POOL_STATE_PROGRESSING: Indicates that the host pool isn't ready yet.\n - HOST_POOL_STATE_READY: Indicates indicates that the host pool is ready.\n - HOST_POOL_STATE_FAILED: Indicates indicates that the host pool is unusable."
+    },
+    "v1HostPoolStatus": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "$ref": "#/definitions/v1HostPoolState",
+          "description": "Indicates the overall state of the host pool."
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The ids of assigned Hosts;"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostPoolCondition"
+          },
+          "description": "Contains a list of conditions that describe in detail the status of the host pool.\n\nFor example, a host pool that is ready could be represented like this (when converted to JSON):\n\n   {\n     \"id\": \"123\",\n     \"spec\": {\n     },\n     \"status\": {\n       \"state\": \"HOST_POOL_STATE_READY\",\n       \"conditions\": [\n         {\n           \"type\": \"HOST_POOL_CONDITION_TYPE_READY\",\n           \"status\": \"CONDITION_STATUS_TRUE\",\n           \"last_transition_time\": \"2025-03-12 20:15:59+00:00\",\n           \"message\": \"The host pool is ready to use\",\n         },\n         {\n           \"type\": \"HOST_POOL_CONDITION_TYPE_FAILED\",\n           \"status\": \"CONDITION_STATUS_FALSE\",\n           \"last_transition_time\": \"2025-03-12 20:10:59+00:00\"\n         }\n       ]\n     }\n   }\n\nIn this example the `READY` condition is true. That tells us that the host pool is ready to use via the API URL\nprovided in the `status.api_url` field.\n\nThe `FAILED` condition is false. That tells us that the host pool is *not* failed.\n\nNote that in this example, to make it shorter, only one condition appears. In general all the conditions (except\n`UNSPECIFIED`) will appear exactly once.\n\nCheck the documentation of the values of the `HostPoolConditionType` enumerated type to see possible conditions and\nreasons."
+        },
+        "host_sets": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v1HostPoolHostSet"
+          },
+          "description": "Current host sets of the host pool.\n\nThis is the current status of the host sets. It will be different to `spec.host_sets` when there is a change that\nis in progress, or if the system can't apply the changes requested by the user.\n\nThe key of the map is the unique identifier of the host set for this host pool."
+        }
+      },
+      "description": "The status contains the details of the host pool provided by the system."
+    },
+    "v1HostPoolsCreateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1HostPool"
+        }
+      }
+    },
+    "v1HostPoolsDeleteResponse": {
+      "type": "object"
+    },
+    "v1HostPoolsGetResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1HostPool"
+        }
+      }
+    },
+    "v1HostPoolsListResponse": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter\nof the request if there are not enough items, or of the system decides that returning that number of items isn't\nfeasible or convenient for performance reasons."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items of the collection that match the search criteria, regardless of the number of results\nrequested with the `limit` parameter."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostPool"
+          },
+          "description": "List of results."
+        }
+      }
+    },
+    "v1HostPoolsUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1HostPool"
+        }
+      }
+    },
+    "v1HostPowerState": {
+      "type": "string",
+      "enum": [
+        "HOST_POWER_STATE_UNSPECIFIED",
+        "HOST_POWER_STATE_ON",
+        "HOST_POWER_STATE_OFF"
+      ],
+      "default": "HOST_POWER_STATE_UNSPECIFIED",
+      "description": "Represents the power state of a host.\n\n - HOST_POWER_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.\n - HOST_POWER_STATE_ON: Indicates that the host is powered on.\n - HOST_POWER_STATE_OFF: Indicates that the host is powered off."
+    },
+    "v1HostSpec": {
+      "type": "object",
+      "properties": {
+        "power_state": {
+          "$ref": "#/definitions/v1HostPowerState",
+          "title": "Desired power state"
+        }
+      },
+      "description": "The spec contains the details of the host as desired by the user."
+    },
+    "v1HostStatus": {
+      "type": "object",
+      "properties": {
+        "power_state": {
+          "$ref": "#/definitions/v1HostPowerState",
+          "title": "Current power state"
+        }
+      },
+      "description": "The spec contains the details of the host as desired by the user."
+    },
+    "v1HostsCreateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1Host"
+        }
+      }
+    },
+    "v1HostsDeleteResponse": {
+      "type": "object"
+    },
+    "v1HostsGetResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1Host"
+        }
+      }
+    },
+    "v1HostsListResponse": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Actual number of items returned. Note that this may be smaller than the value requested in the `limit` parameter\nof the request if there are not enough items, or of the system decides that returning that number of items isn't\nfeasible or convenient for performance reasons."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items of the collection that match the search criteria, regardless of the number of results\nrequested with the `limit` parameter."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Host"
+          },
+          "description": "List of results."
+        }
+      }
+    },
+    "v1HostsUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/v1Host"
         }
       }
     },
