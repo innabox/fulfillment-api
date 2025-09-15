@@ -59,7 +59,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Stream result of v1EventsWatchResponse"
+                $ref: "#/components/schemas/v1EventsWatchResponseStreamResult"
         default:
           description: An unexpected error response.
           content:
@@ -3023,8 +3023,8 @@ components:
       properties:
         object:
           $ref: "#/components/schemas/v1VirtualMachine"
-    Stream result of v1EventsWatchResponse:
-      title: Stream result of v1EventsWatchResponse
+    v1EventsWatchResponseStreamResult:
+      title: v1EventsWatchResponseStreamResult
       type: object
       properties:
         result:

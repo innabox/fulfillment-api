@@ -15,6 +15,7 @@
 #
 
 import pathlib
+import re
 import shutil
 import tempfile
 
@@ -24,6 +25,24 @@ from . import buf
 from . import command
 from . import dirs
 from . import tools
+
+
+def fix_streaming_result_schema_names(path: pathlib.Path) -> None:
+    """
+    Fix the names of schemas for streaming methods, replacing 'Stream result of ...' with
+    '...StreamResult'. This is necessary because some tools (for example 'oq') do not support
+    schema names with spaces.
+    """
+    with open(path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    content = re.sub(
+        r'Stream result of ([^"\':\s]+)',
+        r'\1StreamResult',
+        content
+    )
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
 
 @click.group(invoke_without_command=True)
 @click.pass_context
@@ -73,6 +92,9 @@ def openapi() -> None:
         if not v2_dir.exists():
             v2_dir.mkdir(parents=True)
         shutil.move(v2_tmp_file, v2_file)
+
+        # Process the names of the schemas for streaming methods:
+        fix_streaming_result_schema_names(v2_file)
 
         # Use the 'swagger-codegen-cli' tool to read the generated version 2 and write version 3:
         v3_tmp_dir = tmp_dir / "v3"
