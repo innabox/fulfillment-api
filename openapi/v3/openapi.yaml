@@ -2362,6 +2362,56 @@ components:
       properties:
         object:
           $ref: "#/components/schemas/v1HostClass"
+    v1HostCondition:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/v1HostConditionType"
+        status:
+          $ref: "#/components/schemas/v1ConditionStatus"
+        last_transition_time:
+          type: string
+          description: This time is the last time that the condition was updated.
+          format: date-time
+        reason:
+          type: string
+          description: |-
+            Contains a the reason of the condition in a format suitable for use by programs.
+
+            The possible values will be documented in the object that contains the condition.
+        message:
+          type: string
+          description: |-
+            Contains a text giving more details of the condition.
+
+            This will usually be progress reports, or error messages, and are intended for use by humans, to debug problems.
+      description: Contains the details of a condition that describes the status of
+        a host.
+    v1HostConditionType:
+      type: string
+      description: |-
+        Types of conditions used to describe the status of host.
+
+         - HOST_CONDITION_TYPE_UNSPECIFIED: Unspecified indicates that the condition is unknown.
+
+        This will never be appear in the `spec.conditions` field of a host.
+         - HOST_CONDITION_TYPE_PROGRESSING: Indicates that the host isn't completely ready yet.
+
+        Currently there are no `reason` values defined.
+         - HOST_CONDITION_TYPE_READY: Indicates that the host is ready to use.
+
+        Currently there are no `reason` values defined.
+         - HOST_CONDITION_TYPE_FAILED: Indicates that the host is unusable.
+
+        Currently there are no `reason` values defined.
+         - HOST_CONDITION_TYPE_DEGRADED: Indicates that the host is degraded.
+      default: HOST_CONDITION_TYPE_UNSPECIFIED
+      enum:
+      - HOST_CONDITION_TYPE_UNSPECIFIED
+      - HOST_CONDITION_TYPE_PROGRESSING
+      - HOST_CONDITION_TYPE_READY
+      - HOST_CONDITION_TYPE_FAILED
+      - HOST_CONDITION_TYPE_DEGRADED
     v1HostPool:
       type: object
       properties:
@@ -2613,11 +2663,69 @@ components:
         power_state:
           $ref: "#/components/schemas/v1HostPowerState"
       description: The spec contains the details of the host as desired by the user.
+    v1HostState:
+      type: string
+      description: |-
+        Represents the overall state of a host.
+
+         - HOST_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.
+         - HOST_STATE_PROGRESSING: Indicates that the host isn't ready yet.
+         - HOST_STATE_READY: Indicates indicates that the host is ready.
+         - HOST_STATE_FAILED: Indicates indicates that the host is unusable.
+      default: HOST_STATE_UNSPECIFIED
+      enum:
+      - HOST_STATE_UNSPECIFIED
+      - HOST_STATE_PROGRESSING
+      - HOST_STATE_READY
+      - HOST_STATE_FAILED
     v1HostStatus:
       type: object
       properties:
+        state:
+          $ref: "#/components/schemas/v1HostState"
         power_state:
           $ref: "#/components/schemas/v1HostPowerState"
+        conditions:
+          type: array
+          description: |-
+            Contains a list of conditions that describe in detail the status of the host.
+
+            For example, a host that is ready could be represented like this (when converted to JSON):
+
+               {
+                 "id": "123",
+                 "spec": {
+                 },
+                 "status": {
+                   "state": "HOST_STATE_READY",
+                   "conditions": [
+                     {
+                       "type": "HOST_CONDITION_TYPE_READY",
+                       "status": "CONDITION_STATUS_TRUE",
+                       "last_transition_time": "2025-03-12 20:15:59+00:00",
+                       "message": "The host is ready to use",
+                     },
+                     {
+                       "type": "HOST_CONDITION_TYPE_FAILED",
+                       "status": "CONDITION_STATUS_FALSE",
+                       "last_transition_time": "2025-03-12 20:10:59+00:00"
+                     }
+                   ]
+                 }
+               }
+
+            In this example the `READY` condition is true. That tells us that the host is ready to use via the API URL
+            provided in the `status.api_url` field.
+
+            The `FAILED` condition is false. That tells us that the host is *not* failed.
+
+            Note that in this example, to make it shorter, only one condition appears. In general all the conditions (except
+            `UNSPECIFIED`) will appear exactly once.
+
+            Check the documentation of the values of the `HostConditionType` enumerated type to see possible conditions and
+            reasons.
+          items:
+            $ref: "#/components/schemas/v1HostCondition"
       description: The spec contains the details of the host as desired by the user.
     v1HostsCreateResponse:
       type: object

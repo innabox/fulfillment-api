@@ -2112,6 +2112,45 @@
         }
       }
     },
+    "v1HostCondition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v1HostConditionType",
+          "description": "Indicates the type of condition."
+        },
+        "status": {
+          "$ref": "#/definitions/v1ConditionStatus",
+          "description": "Indicates the status of the condition."
+        },
+        "last_transition_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This time is the last time that the condition was updated."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Contains a the reason of the condition in a format suitable for use by programs.\n\nThe possible values will be documented in the object that contains the condition."
+        },
+        "message": {
+          "type": "string",
+          "description": "Contains a text giving more details of the condition.\n\nThis will usually be progress reports, or error messages, and are intended for use by humans, to debug problems."
+        }
+      },
+      "description": "Contains the details of a condition that describes the status of a host."
+    },
+    "v1HostConditionType": {
+      "type": "string",
+      "enum": [
+        "HOST_CONDITION_TYPE_UNSPECIFIED",
+        "HOST_CONDITION_TYPE_PROGRESSING",
+        "HOST_CONDITION_TYPE_READY",
+        "HOST_CONDITION_TYPE_FAILED",
+        "HOST_CONDITION_TYPE_DEGRADED"
+      ],
+      "default": "HOST_CONDITION_TYPE_UNSPECIFIED",
+      "description": "Types of conditions used to describe the status of host.\n\n - HOST_CONDITION_TYPE_UNSPECIFIED: Unspecified indicates that the condition is unknown.\n\nThis will never be appear in the `spec.conditions` field of a host.\n - HOST_CONDITION_TYPE_PROGRESSING: Indicates that the host isn't completely ready yet.\n\nCurrently there are no `reason` values defined.\n - HOST_CONDITION_TYPE_READY: Indicates that the host is ready to use.\n\nCurrently there are no `reason` values defined.\n - HOST_CONDITION_TYPE_FAILED: Indicates that the host is unusable.\n\nCurrently there are no `reason` values defined.\n - HOST_CONDITION_TYPE_DEGRADED: Indicates that the host is degraded."
+    },
     "v1HostPool": {
       "type": "object",
       "properties": {
@@ -2311,12 +2350,35 @@
       },
       "description": "The spec contains the details of the host as desired by the user."
     },
+    "v1HostState": {
+      "type": "string",
+      "enum": [
+        "HOST_STATE_UNSPECIFIED",
+        "HOST_STATE_PROGRESSING",
+        "HOST_STATE_READY",
+        "HOST_STATE_FAILED"
+      ],
+      "default": "HOST_STATE_UNSPECIFIED",
+      "description": "Represents the overall state of a host.\n\n - HOST_STATE_UNSPECIFIED: Unspecified indicates that the state is unknown.\n - HOST_STATE_PROGRESSING: Indicates that the host isn't ready yet.\n - HOST_STATE_READY: Indicates indicates that the host is ready.\n - HOST_STATE_FAILED: Indicates indicates that the host is unusable."
+    },
     "v1HostStatus": {
       "type": "object",
       "properties": {
+        "state": {
+          "$ref": "#/definitions/v1HostState",
+          "description": "Indicates the overall state of the host."
+        },
         "power_state": {
           "$ref": "#/definitions/v1HostPowerState",
           "title": "Current power state"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1HostCondition"
+          },
+          "description": "Contains a list of conditions that describe in detail the status of the host.\n\nFor example, a host that is ready could be represented like this (when converted to JSON):\n\n   {\n     \"id\": \"123\",\n     \"spec\": {\n     },\n     \"status\": {\n       \"state\": \"HOST_STATE_READY\",\n       \"conditions\": [\n         {\n           \"type\": \"HOST_CONDITION_TYPE_READY\",\n           \"status\": \"CONDITION_STATUS_TRUE\",\n           \"last_transition_time\": \"2025-03-12 20:15:59+00:00\",\n           \"message\": \"The host is ready to use\",\n         },\n         {\n           \"type\": \"HOST_CONDITION_TYPE_FAILED\",\n           \"status\": \"CONDITION_STATUS_FALSE\",\n           \"last_transition_time\": \"2025-03-12 20:10:59+00:00\"\n         }\n       ]\n     }\n   }\n\nIn this example the `READY` condition is true. That tells us that the host is ready to use via the API URL\nprovided in the `status.api_url` field.\n\nThe `FAILED` condition is false. That tells us that the host is *not* failed.\n\nNote that in this example, to make it shorter, only one condition appears. In general all the conditions (except\n`UNSPECIFIED`) will appear exactly once.\n\nCheck the documentation of the values of the `HostConditionType` enumerated type to see possible conditions and\nreasons."
         }
       },
       "description": "The spec contains the details of the host as desired by the user."
