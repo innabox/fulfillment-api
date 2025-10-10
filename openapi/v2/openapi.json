@@ -36,6 +36,9 @@
     },
     {
       "name": "VirtualMachines"
+    },
+    {
+      "name": "Metadata"
     }
   ],
   "schemes": [
@@ -1634,6 +1637,19 @@
         }
       }
     },
+    "v1Authn": {
+      "type": "object",
+      "properties": {
+        "trusted_token_issuers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of the OAuth issuers whose access tokens are accepted by the server.\n\nThis means that the client can select one of this and then use the OAuth discovery endpoint to find the details of\nthe OAuth server. For example if the value is `https://my.oauth.com` then the client can obtain the details of the\nauthorizatoin server going to the following URL:\n\n  https://my.oauth.com/.well-known/oauth-authorization-server\n\nThe discovery process is defined in [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414).\n\nNote that having an access token issued by one of this servers doesn't guarantee that the requests from the user\nwill be accepted: it will still be subject to authorization checks that may grant or deny access."
+        }
+      },
+      "description": "Contains the information that helps client know how authentication is managed by the server."
+    },
     "v1Cluster": {
       "type": "object",
       "properties": {
@@ -2455,6 +2471,14 @@
         }
       },
       "description": "Metadata common to all kinds of objects."
+    },
+    "v1MetadataGetResponse": {
+      "type": "object",
+      "properties": {
+        "authn": {
+          "$ref": "#/definitions/v1Authn"
+        }
+      }
     },
     "v1VirtualMachine": {
       "type": "object",

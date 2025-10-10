@@ -19,6 +19,7 @@ tags:
 - name: Hosts
 - name: VirtualMachineTemplates
 - name: VirtualMachines
+- name: Metadata
 paths:
   /api/events/v1/events:
     get:
@@ -1751,6 +1752,28 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/protobufAny"
+    v1Authn:
+      type: object
+      properties:
+        trusted_token_issuers:
+          type: array
+          description: |-
+            A list of the OAuth issuers whose access tokens are accepted by the server.
+
+            This means that the client can select one of this and then use the OAuth discovery endpoint to find the details of
+            the OAuth server. For example if the value is `https://my.oauth.com` then the client can obtain the details of the
+            authorizatoin server going to the following URL:
+
+              https://my.oauth.com/.well-known/oauth-authorization-server
+
+            The discovery process is defined in [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414).
+
+            Note that having an access token issued by one of this servers doesn't guarantee that the requests from the user
+            will be accepted: it will still be subject to authorization checks that may grant or deny access.
+          items:
+            type: string
+      description: Contains the information that helps client know how authentication
+        is managed by the server.
     v1Cluster:
       type: object
       properties:
@@ -2782,6 +2805,11 @@ components:
           items:
             type: string
       description: Metadata common to all kinds of objects.
+    v1MetadataGetResponse:
+      type: object
+      properties:
+        authn:
+          $ref: "#/components/schemas/v1Authn"
     v1VirtualMachine:
       type: object
       properties:
