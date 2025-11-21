@@ -2472,6 +2472,13 @@
         "name": {
           "type": "string",
           "description": "Human friendly name of the object.\n\nHas the same restrictions than DNS labels, as described in RFC 1035:\n\n- Must be between 1 and 63 characters long.\n- Must only contain letters (a-z), digits (0-9) and hyphens (-).\n- It isn't case sensitive.\n\nIt is optional and not unique, so multiple objecs, even created by the same user or tenant, can have the same name."
+        },
+        "tenants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Identifiers of the tenants that the object is assigned to."
         }
       },
       "description": "Metadata common to all kinds of objects."

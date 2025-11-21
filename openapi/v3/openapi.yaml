@@ -2816,6 +2816,11 @@ components:
             - It isn't case sensitive.
 
             It is optional and not unique, so multiple objecs, even created by the same user or tenant, can have the same name.
+        tenants:
+          type: array
+          description: Identifiers of the tenants that the object is assigned to.
+          items:
+            type: string
       description: Metadata common to all kinds of objects.
     v1MetadataGetResponse:
       type: object
